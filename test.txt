@@ -1,0 +1,42 @@
+
+
+//nothing to the right, nothing in front (normal right turn)
+else if (right_sensor == 0 && front_centre_sensor == 0 && left != true) {
+        
+        robot->direction = RIGHT;
+        if (robot->currentSpeed < 2) {
+            robot->direction = RIGHT;
+        }
+    }
+
+
+//reading wall on left and in front (right spin)
+else if (left_sensor == 1 && front_centre_sensor == 1 || turning == true) {
+       if (robot->currentSpeed > 0){
+       robot->direction = DOWN;
+       }
+       else{
+           turning = true;
+           robot->direction = RIGHT;
+       }      
+    }
+
+//reading wall on right and in front (left spin)
+else if (right_sensor == 1 && front_centre_sensor == 1 || turning == true) {
+       if (robot->currentSpeed > 0){
+       robot->direction = DOWN;
+       }
+       else{
+           turning = true;
+           robot->direction = LEFT;
+       }      
+    }
+
+//nothing to the right, nothing in front (normal right turn)
+else if (right_sensor == 0 && front_centre_sensor == 0 && left != true) {
+        
+        robot->direction = RIGHT;
+        if (robot->currentSpeed < 2) {
+            robot->direction = RIGHT;
+        }
+    }

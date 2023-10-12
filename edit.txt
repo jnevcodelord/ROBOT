@@ -1,0 +1,24 @@
+  }
+    if (front_centre_sensor == 1){
+        robot->currentSpeed = 0;
+    }
+
+    if ((robot->currentSpeed==0) && ((front_centre_sensor >= 1) && (left_sensor == 0)) ) {
+        robot->direction = LEFT;
+        printf("Left");
+    }
+
+
+    else if ((robot->currentSpeed>0) && ((front_centre_sensor >= 1) && (left_sensor == 0) && (right_sensor == 0)) ) {
+        robot->direction = DOWN;
+        printf("Down");
+    }
+    
+    else if ((robot->currentSpeed>0) && ((right_sensor >= 1)) ) {
+        robot->direction = LEFT;
+        printf("Left");
+    }
+    else if ((robot->currentSpeed>0) && ((left_sensor >= 1)) ) {
+        robot->direction = RIGHT;
+        printf("Right");
+    }
