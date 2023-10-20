@@ -7,12 +7,18 @@ bool left = false;
 bool right = false;
 bool rightspinning = false;
 bool leftspinning = false;
+bool launch = true;
+bool starting = true;
+int startingangle = 0;
+bool rotateback = false;
+bool finished = false;
+bool kickoff = true;
 
 
 void setup_robot(struct Robot *robot){
-    robot->x = (OVERALL_WINDOW_WIDTH/2-50) -16;
+    robot->x = OVERALL_WINDOW_WIDTH/2-50-6 +100;
     robot->y = OVERALL_WINDOW_HEIGHT-50;
-    robot->true_x = (OVERALL_WINDOW_WIDTH/2-50)-16;
+    robot->true_x = OVERALL_WINDOW_WIDTH/2-50-6 +100;
     robot->true_y = OVERALL_WINDOW_HEIGHT-50;
     robot->width = ROBOT_WIDTH;
     robot->height = ROBOT_HEIGHT;
@@ -303,10 +309,19 @@ void robotMotorMove(struct Robot * robot, int crashed) {
     else {
         switch(robot->direction){
             case UP :
-                robot->currentSpeed += DEFAULT_SPEED_CHANGE;
+              if (launch == true){
+               
+                 robot->currentSpeed += DEFAULT_SPEED_CHANGE; 
+                 launch = false;
+               }  
+               if (finished == true){
+                 
+                   robot->currentSpeed += (DEFAULT_SPEED_CHANGE);
                 if (robot->currentSpeed > MAX_ROBOT_SPEED)
                     robot->currentSpeed = MAX_ROBOT_SPEED;
                 break;
+              }
+            break;
             case DOWN :
                 robot->currentSpeed -= DEFAULT_SPEED_CHANGE;
                 if (robot->currentSpeed < -MAX_ROBOT_SPEED)
@@ -350,25 +365,65 @@ void robotMotorMove(struct Robot * robot, int crashed) {
 
 
 void robotAutoMotorMove(struct Robot *robot, int front_centre_sensor, int left_sensor, int right_sensor) {
+
+  if (rotateback == true){         
+         robot->angle = (robot->angle+360+DEFAULT_ANGLE_CHANGE)%360;
+         startingangle += DEFAULT_ANGLE_CHANGE;
+          if (startingangle >= 30){
+            starting = false;
+            rotateback = false;
+            finished = true;
+          }
+    }
+    if (finished == false){
+      if (starting == true){
+        robot->angle = (robot->angle+360-DEFAULT_ANGLE_CHANGE)%360;
+        startingangle += DEFAULT_ANGLE_CHANGE;
+          if (startingangle >= 45){
+            starting = false;
+          }
+     }
+    if (front_centre_sensor == 0){
+        robot->direction = UP;
+    }
+    if (front_centre_sensor > 0){
+       if (robot->currentSpeed > 0){
+       robot->direction = DOWN;
+       }
+       else{
+           startingangle=0;
+           rotateback = true;
+       }
+    }
+    }
+
+
+if (finished == true){
+
+   
+    if (front_centre_sensor == 0 && (left_sensor >= 1 || right_sensor >= 1) && rightspinning == false && leftspinning == false ) {
  
-    if (front_centre_sensor == 0 && left_sensor == 1 && rightspinning == false && leftspinning == false ) {
-        if (robot->currentSpeed<2)
+        if (robot->currentSpeed<6)     
             robot->direction = UP;
     }
-    else if (left_sensor == 0 && front_centre_sensor == 0 && right == false && rightspinning == false && leftspinning == false) {
+
+        else if (left_sensor == 0 && front_centre_sensor == 0 && right == false && rightspinning == false && leftspinning == false) {
         left = true;
         robot->direction = LEFT;
         
     }
 
-    else if (right_sensor == 0 && front_centre_sensor == 0 && left == false && rightspinning == false && leftspinning == false) {
-        right = true;
-        robot->direction = RIGHT;
+
+    //  else if (right_sensor == 0 && front_centre_sensor == 0 && left == false && rightspinning == false && leftspinning == false) {
+    //     right = true;
+    //     robot->direction = RIGHT;
+    //     printf("SHOULD BE TURNING RIGHT");
         
-    }
+    // }
    //reading wall on left and in front (right spin)
-    else if (left_sensor == 1 && front_centre_sensor == 1 || rightspinning == true ) {
+    else if (left_sensor >= 1 && front_centre_sensor >= 1 || rightspinning == true ) {
        if (robot->currentSpeed > 0){
+        printf("speeeeed:%d\n",robot->currentSpeed);
        robot->direction = DOWN;
        }
        else{
@@ -387,15 +442,14 @@ void robotAutoMotorMove(struct Robot *robot, int front_centre_sensor, int left_s
            robot->direction = LEFT;
            leftspinning = true;
        }
-        
-    }
+
+}
 
 
-    
-  
-   
 
  
+}
+
 }
 
 

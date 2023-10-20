@@ -40,3 +40,31 @@ else if (right_sensor == 0 && front_centre_sensor == 0 && left != true) {
             robot->direction = RIGHT;
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       else if ((robot->currentSpeed==0) && ((front_centre_sensor >= 1) && (left_sensor == 0)) ) {
+        robot->direction = LEFT;
+    }
+    else if ((robot->currentSpeed>0) && ((right_sensor >= 1)) ) {
+        robot->direction = LEFT;
+    }
+    else if ((robot->currentSpeed>0) && ((left_sensor >= 1)) ) {
+        robot->direction = RIGHT;
+    }

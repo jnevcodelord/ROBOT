@@ -1,24 +1,41 @@
-  }
-    if (front_centre_sensor == 1){
-        robot->currentSpeed = 0;
+
+    if (front_centre_sensor == 0 && (left_sensor == 1 || right_sensor == 1) && rightspinning == false && leftspinning == false ) {
+        if (robot->currentSpeed<2)
+            robot->direction = UP;
     }
 
-    if ((robot->currentSpeed==0) && ((front_centre_sensor >= 1) && (left_sensor == 0)) ) {
+    else if (left_sensor == 0 && front_centre_sensor == 0 && right == false && rightspinning == false && leftspinning == false) {
+        left = true;
         robot->direction = LEFT;
-        printf("Left");
+        
     }
 
-
-    else if ((robot->currentSpeed>0) && ((front_centre_sensor >= 1) && (left_sensor == 0) && (right_sensor == 0)) ) {
-        robot->direction = DOWN;
-        printf("Down");
-    }
-    
-    else if ((robot->currentSpeed>0) && ((right_sensor >= 1)) ) {
-        robot->direction = LEFT;
-        printf("Left");
-    }
-    else if ((robot->currentSpeed>0) && ((left_sensor >= 1)) ) {
+    else if (right_sensor == 0 && front_centre_sensor == 0 && left == false && rightspinning == false && leftspinning == false) {
+        right = true;
         robot->direction = RIGHT;
-        printf("Right");
+        printf("SHOULD BE TURNING RIGHT");
+        
+    }
+   //reading wall on left and in front (right spin)
+    else if (left_sensor == 1 && front_centre_sensor == 1 || rightspinning == true ) {
+       if (robot->currentSpeed > 0){
+       robot->direction = DOWN;
+       }
+       else{
+           robot->direction = RIGHT;
+           rightspinning = true;
+       }
+        
+    }
+
+    //reading wall on right and in front (left spin)
+    else if (right_sensor == 1 && front_centre_sensor == 1 || leftspinning == true ) {
+       if (robot->currentSpeed > 0){
+       robot->direction = DOWN;
+       }
+       else{
+           robot->direction = LEFT;
+           leftspinning = true;
+       }
+        
     }
